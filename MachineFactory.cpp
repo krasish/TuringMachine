@@ -201,8 +201,12 @@ void MachineFactory::readMachineFromConsole() {
 	else {
 		tape = Tape(blank_symbol);
 	}
-	if (!tapeIsCorrect()) {
+	while (!tapeIsCorrect()) {
 		cout << RED_TEXT << "Tape contains symbols that are not present in gamma!" << RESET_COLORING;
+		cout << BRIGHT_CYAN_TEXT << "Tape: " << RESET_COLORING;
+		string tape_line;
+		getline(cin, tape_line);
+		tape = Tape(tape_line, blank_symbol);
 	}
 
 	unsigned states_count;

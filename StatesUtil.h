@@ -4,8 +4,8 @@
 #include <utility>
 #include <tuple>
 #include <stdexcept>
+#include <ostream>
 #include "Tape.h"
-
 
 using std::string;
 using std::unordered_map;
@@ -14,6 +14,7 @@ using std::tuple;
 using std::hash;
 using std::out_of_range;
 using std::get;
+using std::ostream;
 
 class StatesUtil;
 struct State;
@@ -44,7 +45,8 @@ public:
 	StateType transition(Tape& tape);
 	bool addTrasition(string from, string to, char old_tape, char new_tape, TapeMovement movement);
 	bool addState(string name, StateType type);
-
+	void printStates(ostream& os);
+	void printTransitions(ostream& os);
 	
 private:
 	string current;
@@ -53,5 +55,6 @@ private:
 
 	void moveTape(Tape& tape, TapeMovement movement);
 	void setCurrent(string newCurrent);
+	
 };
 

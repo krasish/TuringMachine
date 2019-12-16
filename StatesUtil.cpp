@@ -40,6 +40,31 @@ bool StatesUtil::addState(string name, StateType type) {
 	return states.try_emplace(name, type).second;
 }
 
+void StatesUtil::printStates(ostream& os) {
+	for (auto it = states.begin(); it != states.end(); it++) {
+		switch (it->second) {
+		case StateType::ACCEPTING: os << "A "; break;
+		case StateType::REJECTING: os << "R "; break;
+		case StateType::NORMAL: os << "N "; break;
+		}
+		os << it->first << '\n';
+	}
+	os << "Current: " << current << '\n';
+}
+
+void StatesUtil::printTransitions(ostream& os) {
+	for (auto it = transitions.begin(); it != transitions.end(); it++) {
+		os << it->first.first << ' ' << it->first.second;
+		os << " => ";
+		os << get<0>(it->second) << ' ' << get<1>(it->second) << ' ';
+		switch (get<2>(it->second)) {
+		case TapeMovement::LEFT : os << "L"; break;
+		case TapeMovement::RIGHT : os << "R"; break;
+		case TapeMovement::STAY : os << "N"; break;
+		}
+		os << '\n';
+	}
+}
 
 void StatesUtil::moveTape(Tape& tape, TapeMovement movement) {
 
