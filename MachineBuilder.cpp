@@ -1,6 +1,6 @@
-#include "MachineFactory.h"
+#include "MachineBuilder.h"
 
-Machine& MachineFactory::getMachine() {
+Machine& MachineBuilder::getMachine() {
 	if (!machine_loaded) {
 		throw invalid_argument("Machine was not loaded");
 	}

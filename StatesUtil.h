@@ -38,7 +38,7 @@ namespace std {
 }
 
 class StatesUtil {
-	friend class MachineFactory;
+	friend class MachineBuilder;
 public:
 	StatesUtil(state_map states = state_map(), transitions_map transitions = transitions_map(), string current = "") : states(states), transitions(transitions), current(current) {};
 

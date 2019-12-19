@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include<string>
-#include "MachineFactory.h"
+#include "MachineBuilder.h"
 #include "MachineParser.h"
 
 using std::cout;
@@ -10,7 +10,7 @@ using std::endl;
 using std::string;
 
 int main() {
-	MachineFactory mf;
+	MachineBuilder mf;
 	MachineParser p(&mf);
 	p.parseFromConsole();
 	Machine m = mf.getMachine();

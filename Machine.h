@@ -23,7 +23,7 @@ struct MachineSymbols {
 };
 
 class Machine {
-	friend class MachineFactory;
+	friend class MachineBuilder;
 public:
 
 	Machine(MachineSymbols symbols = MachineSymbols(), StatesUtil states = StatesUtil(), Tape tape = Tape()) : symbols(symbols), states(states), tape(tape) {};

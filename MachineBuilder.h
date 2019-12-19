@@ -4,7 +4,7 @@
 
 using std::invalid_argument;
 
-class MachineFactory {
+class MachineBuilder {
 private:
 	char blank_symbol;
 	symbol_set sigma;

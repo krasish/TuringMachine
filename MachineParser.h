@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <algorithm>
-#include "MachineFactory.h"
+#include "MachineBuilder.h"
 
 using std::cout;
 using std::cin;
@@ -14,13 +14,13 @@ typedef pair<state_pair, state_tuple> transition;
 class MachineParser {
 public:
 
-	MachineParser(MachineFactory* factory = nullptr) : factory(factory) {}
+	MachineParser(MachineBuilder* factory = nullptr) : factory(factory) {}
 
 	void parseFromConsole();
 	void parseFromFile();
 
 private:
-	MachineFactory* factory;
+	MachineBuilder* factory;
 
 	symbol_set& parseSymbolsLine(string line);
 	void readSymbolsFromConsole(symbol_set& sigma, symbol_set& gamma, char blank_symbol);
