@@ -1,9 +1,8 @@
 #include <iostream>
 #include <fstream>
-//#include <ostream>
-//#include <istream>
 #include<string>
 #include "MachineFactory.h"
+#include "MachineParser.h"
 
 using std::cout;
 using std::cin;
@@ -12,13 +11,9 @@ using std::string;
 
 int main() {
 	MachineFactory mf;
-	mf.readMachineFromConsole();
+	MachineParser p(&mf);
+	p.parseFromConsole();
 	Machine m = mf.getMachine();
-
-	if (std::ifstream("C:\\Users\\krasi\\Desktop\\nf.txt").good()) {
-		std::ofstream ofs("C:\\Users\\krasi\\Desktop\\nf.txt");
-		m.save(ofs);
-		ofs.close();
-		cout << GREEN_TEXT << "Success!" << RESET_COLORING << endl;
-	}
+	cout << m.executeAndGetTape();
+	return 0;
 }
