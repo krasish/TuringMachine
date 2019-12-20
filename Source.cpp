@@ -10,10 +10,16 @@ using std::endl;
 using std::string;
 
 int main() {
+	
+	string filename;
+	std::ifstream ifs(filename);
 	MachineBuilder mf;
 	MachineParser p(&mf);
-	p.parseFromConsole();
+	p.parseFromFile(ifs);
+	ifs.close();
 	Machine m = mf.getMachine();
+	
 	cout << m.executeAndGetTape();
+	
 	return 0;
 }

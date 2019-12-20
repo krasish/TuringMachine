@@ -20,7 +20,6 @@ public:
 
 	Machine& getMachine();
 
-
 	void setBlankSymbol(char blank_Symbol) { this->blank_symbol = blank_symbol; }
 	void setSigma(symbol_set& sigma) { this->sigma = sigma; }
 	void setGamma(symbol_set& gamma) { this->gamma = gamma; }

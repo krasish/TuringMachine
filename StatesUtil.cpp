@@ -60,7 +60,7 @@ void StatesUtil::printTransitions(ostream& os) {
 		switch (get<2>(it->second)) {
 		case TapeMovement::LEFT : os << "L"; break;
 		case TapeMovement::RIGHT : os << "R"; break;
-		case TapeMovement::STAY : os << "N"; break;
+		case TapeMovement::STAY : os << "S"; break;
 		}
 		os << '\n';
 	}
