@@ -40,7 +40,7 @@ bool StatesUtil::addState(string name, StateType type) {
 	return states.try_emplace(name, type).second;
 }
 
-void StatesUtil::printStates(ostream& os) {
+void StatesUtil::printStates(ostream& os, bool yellow_starting) {
 	for (auto it = states.begin(); it != states.end(); it++) {
 		switch (it->second) {
 		case StateType::ACCEPTING: os << "A "; break;
@@ -49,7 +49,13 @@ void StatesUtil::printStates(ostream& os) {
 		}
 		os << it->first << '\n';
 	}
+
+	if (yellow_starting) {
+		os << "\x1B[33m" << "Current: " << "\033[0m" << current << '\n';
+	}
+	else {
 	os << "Current: " << current << '\n';
+	}
 }
 
 void StatesUtil::printTransitions(ostream& os) {
@@ -63,6 +69,47 @@ void StatesUtil::printTransitions(ostream& os) {
 		case TapeMovement::STAY : os << "S"; break;
 		}
 		os << '\n';
+	}
+}
+
+StatesUtil& StatesUtil::compose(const StatesUtil& other) {
+	state_map new_states = *(new state_map(states));
+
+	for (auto& state : new_states) {
+		if (state.second == StateType::ACCEPTING) {
+			state.second = StateType::NORMAL;
+		}
+	}
+
+	new_states.emplace("HELPER-STATE", StateType::NORMAL);
+
+	set<string> renamed;
+	
+	for (auto el : other.states) {
+		if (new_states.find(el.first) != new_states.end()) {
+			new_states.emplace(el.first + "-RNMD", el.second);
+			renamed.insert(el.first);
+		}
+		else {
+			new_states.insert(el);
+		}
+	}
+
+
+	transitions_map new_transitions = *(new transitions_map(transitions));
+	for (auto& el : other.transitions) {
+		if (renamed.find(el.first.first) == renamed.end() && renamed.find(get<0>(el.second)) == renamed.end()) {
+			new_transitions.insert(el);
+		}
+		else if (renamed.find(el.first.first) != renamed.end() && renamed.find(get<0>(el.second)) == renamed.end()) {
+			new_transitions.emplace(state_pair(el.first.first + "-RNMD", el.first.second), el.second);
+		}
+		else if (renamed.find(get<0>(el.second)) != renamed.end() && renamed.find(el.first.first) == renamed.end()) {
+			new_transitions.emplace(el.first, state_tuple(get<0>(el.second) + "-RNMD", get<1>(el.second), get<2>(el.second)));
+		}
+		else {
+			new_transitions.emplace(state_pair(el.first.first + "-RNMD", el.first.second), state_tuple(get<0>(el.second) + "-RNMD", get<1>(el.second), get<2>(el.second)));
+		}
 	}
 }
 

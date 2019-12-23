@@ -64,6 +64,23 @@ void Machine::print() {
 
 }
 
+Machine& Machine::compose(const Machine& other) {
+	MachineSymbols new_symbols = this->symbols.compose(other.symbols);
+	StatesUtil new_states = this->states.compose(other.states);
+	bool starting_is_renamed = new_states.states.find(other.states.current) == other.states.states.end();
+
+	for (auto& el : this->states.states) {
+		if (el.second == StateType::ACCEPTING) {
+			for (auto& symbol : new_symbols.sigma) {
+				if(starting_is_renamed)
+					new_states.addTrasition(el.first, other.states.current + "-RNMD", symbol, symbol, TapeMovement::STAY);
+				else
+					new_states.addTrasition(el.first, other.states.current, symbol, symbol, TapeMovement::STAY);
+			}
+		}
+	}
+}
+
 void MachineSymbols::printSymbols(ostream& os, symbol_set printable) {
 	for (auto it = printable.begin(); it != printable.end(); it++) {
 		os << *it;

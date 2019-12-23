@@ -44,7 +44,7 @@ struct MachineSymbols {
 
 	MachineSymbols(symbol_set sigma = symbol_set(), symbol_set gamma = symbol_set(), char blank_symbol = ' ') : sigma(sigma), gamma(gamma), blank_symbol(blank_symbol) {};
 	void printSymbols(ostream& os, symbol_set printable);
-	MachineSymbols& compose(MachineSymbols& other);
+	MachineSymbols& compose(const MachineSymbols& other);
 };
 
 class Machine {
