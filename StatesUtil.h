@@ -43,7 +43,7 @@ class StatesUtil {
 	friend class MachineBuilder;
 	friend class Machine;
 public:
-	StatesUtil(state_map states = state_map(), transitions_map transitions = transitions_map(), string current = "") : states(states), transitions(transitions), current(current) {};
+	StatesUtil(state_map states = state_map(), transitions_map transitions = transitions_map(), string current = "", string starting = "") : states(states), transitions(transitions), current(current), starting(starting) {};
 
 	StateType transition(Tape& tape);
 	bool addTrasition(string from, string to, char old_tape, char new_tape, TapeMovement movement);
@@ -54,6 +54,7 @@ public:
 	StatesUtil& compose(const StatesUtil& other) const;
 
 private:
+	string starting;
 	string current;
 	state_map states;
 	transitions_map transitions;

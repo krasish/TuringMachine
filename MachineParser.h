@@ -28,12 +28,13 @@ private:
 	symbol_set& parseFileSymbolsLine(string line);
 
 	void readSymbolsFromConsole(symbol_set& sigma, symbol_set& gamma, char blank_symbol);
-	void readStatesFromConsole(state_map&, string&, unsigned);
+	void readStatesFromConsole(state_map&, string&, string&, unsigned);
 	void readTransitionsFromConsole(transitions_map&, symbol_set&, state_map&, unsigned);
 	transition parseTransition(symbol_set&, state_map&, size_t number, bool console, istream& is);
 
 	bool symbolSetsAreCorrect(symbol_set& sigma, symbol_set& gamma, char blank_symbol);
 	bool tapeIsCorrect(Tape& tape, symbol_set& gamma, char blank_symbol);
+	bool isLineForStartingState(string& line) { return (line.substr(0, 9) == "Starting:"); }
 	bool isLineForCurrentState(string& line) { return (line.substr(0, 8) == "Current:"); }
 
 	string getAfterColumn(string& s);

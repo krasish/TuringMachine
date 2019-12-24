@@ -133,9 +133,10 @@ void MachineParser::parseFromConsole() {
 
 	state_map states = *(new state_map);
 	string starting = *(new string);
+	string current = *(new string);
 	transitions_map transitions = *(new transitions_map);
 
-	readStatesFromConsole(states, starting, states_count);
+	readStatesFromConsole(states, starting, current, states_count);
 
 	unsigned transitions_count;
 	cout << BRIGHT_CYAN_TEXT << "Number of transitions: " << RESET_COLORING;
@@ -234,7 +235,7 @@ void MachineParser::parseFromFile(istream& is) {
 
 	do {
 		getline(is, line);
-		if (isLineForCurrentState(line)) {
+		if (isLineForStartingState(line)) {
 			break;
 		}
 		string name = line.substr(2);
@@ -253,7 +254,21 @@ void MachineParser::parseFromFile(istream& is) {
 		}
 
 		states.emplace(name, type);
-	} while (!isLineForCurrentState(line));
+	} while (!isLineForStartingState(line));
+
+	string starting = getAfterColumn(line);
+
+	if (states.find(starting) == states.end()) {
+		printFileErrorMessage();
+		return;
+	}
+
+	getline(is, line);
+
+	if (!isLineForCurrentState(line)) {
+		printFileErrorMessage();
+		return;
+	}
 
 	string current = getAfterColumn(line);
 
@@ -272,6 +287,7 @@ void MachineParser::parseFromFile(istream& is) {
 	transitions_map transitions = *(new transitions_map);
 
 	try {
+
 		while (!is.eof()) {
 			transition t = parseTransition(gamma, states, 0, false, is);
 			transitions.insert(t);
@@ -286,13 +302,14 @@ void MachineParser::parseFromFile(istream& is) {
 
 	builder->setStateMap(states);
 	builder->setTransitionsMap(transitions);
-	builder->setStartingState(current);
+	builder->setStartingState(starting);
+	builder->setCurrentState(current);
 
 	builder->setLoaded();
 	cout << GREEN_TEXT << "Machine loaded from file successfully!" << RESET_COLORING << endl;
 }
 
-void MachineParser::readStatesFromConsole(state_map& states, string& starting, unsigned count) {
+void MachineParser::readStatesFromConsole(state_map& states, string& starting, string& current, unsigned count) {
 	cout << endl;
 	cout << CYAN_TEXT << "Input states in format: \"<T> <statename>\"" << endl;
 	cout << '\t' << "<T> <- {A, R, N} where A = ACCEPTING; R = REJECTING; N = NORMAL" << endl;
@@ -334,6 +351,13 @@ void MachineParser::readStatesFromConsole(state_map& states, string& starting, u
 		getline(cin, starting);
 	}
 
+	cout << BRIGHT_CYAN_TEXT << "Current state: " << RESET_COLORING;
+	getline(cin, current);
+	while (states.find(current) == states.end()) {
+		cerr << RED_TEXT << "Inexisting state!" << RESET_COLORING << endl;
+		cout << BRIGHT_CYAN_TEXT << "Current state: " << RESET_COLORING;
+		getline(cin, current);
+	}
 }
 
 void MachineParser::readTransitionsFromConsole(transitions_map& transitions, symbol_set& gamma, state_map& states, unsigned count) {

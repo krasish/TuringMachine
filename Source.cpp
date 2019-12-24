@@ -21,12 +21,11 @@ int main() {
 	MachineParser p(&mb);
 	p.parseFromFile(ifs);
 	Machine m = mb.getMachine();
-	//p.parseFromFile(ifs2);
-	p.parseFromConsole();
+	p.parseFromFile(ifs2);
+	//p.parseFromConsole();
 	Machine m2 = mb.getMachine();
 	Machine m3 = m.compose(m2);
-	//TODO: create functino pass string to machine tape
-	//m3.save(ofs);
+	m3.save(ofs);
 	ifs.close();
 	ifs2.close();
 	ofs.close();

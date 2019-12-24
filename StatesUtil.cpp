@@ -51,9 +51,11 @@ void StatesUtil::printStates(ostream& os, bool yellow_starting) const{
 	}
 
 	if (yellow_starting) {
+		os << "\x1B[33m" << "Starting: " << "\033[0m" << starting << '\n';
 		os << "\x1B[33m" << "Current: " << "\033[0m" << current << '\n';
 	}
 	else {
+	os << "Starting: " << starting << '\n';
 	os << "Current: " << current << '\n';
 	}
 }
@@ -109,7 +111,7 @@ StatesUtil& StatesUtil::compose(const StatesUtil& other) const{
 		}
 	}
 	
-	return *(new StatesUtil(new_states, new_transitions, this->current));
+	return *(new StatesUtil(new_states, new_transitions, this->current, this->starting));
 }
 
 void StatesUtil::moveTape(Tape& tape, TapeMovement movement) {

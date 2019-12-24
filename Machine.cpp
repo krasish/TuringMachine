@@ -51,7 +51,7 @@ string Machine::executeAndGetTape(string tape_load) {
 	return (string)tape;
 }
 
-void Machine::print() {
+void Machine::print() const{
 	cout << endl;
 	cout << YELLOW_TEXT << "------------------------------------------------\n";
 	cout << YELLOW_TEXT << "\t\t| Machine <" << id << "> |" << RESET_COLORING << endl;
@@ -102,7 +102,11 @@ Machine& Machine::compose(const Machine& other) const {
 }
 
 //Machine& Machine::whileMachine(const Machine& condition) const{
-//	
+//	Machine while_machine = condition.compose(*this);
+//	/*for (size_t i = 0; i < length; i++) {
+//
+//	}*/
+//
 //}
 
 

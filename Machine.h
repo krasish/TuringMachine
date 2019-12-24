@@ -58,7 +58,7 @@ public:
 	void save(ostream& os) const;
 	string executeAndGetTape();
 	string executeAndGetTape(string tape_load);
-	void print();
+	void print() const;
 
 	Machine& compose(const Machine& other) const;
 	Machine& whileMachine(const Machine& condition) const;

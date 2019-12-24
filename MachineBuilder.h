@@ -13,6 +13,7 @@ private:
 	state_map states;
 	transitions_map transitions;
 	string starting;
+	string current;
 
 	bool machine_loaded = false;
 
@@ -27,6 +28,7 @@ public:
 	void setStateMap(state_map& states) { this->states = states; }
 	void setTransitionsMap(transitions_map& transitions) { this->transitions = transitions; }
 	void setStartingState(string starting) { this->starting = starting; }
+	void setCurrentState(string current) { this->current = current; }
 
 	void setLoaded() { machine_loaded = true; }
 };
