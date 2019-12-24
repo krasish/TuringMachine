@@ -12,7 +12,16 @@ bool Machine::execute() {
 	}
 }
 
-void Machine::save(ostream& os) {
+bool Machine::execute(string tape_load) {
+	for (char ch : tape_load) {
+		if (symbols.gamma.find(ch) == symbols.gamma.end())
+			return new invalid_argument("Attempt to load not-supported symbol.");
+	}
+	tape.insertStringToTape(tape_load);
+	execute();
+}
+
+void Machine::save(ostream& os) const{
 	os << "Blank: " << symbols.blank_symbol << '\n';
 
 	os << "Gamma: ";
@@ -34,6 +43,11 @@ void Machine::save(ostream& os) {
 
 string Machine::executeAndGetTape() {
 	execute();
+	return (string)tape;
+}
+
+string Machine::executeAndGetTape(string tape_load) {
+	execute(tape_load);
 	return (string)tape;
 }
 
@@ -64,10 +78,10 @@ void Machine::print() {
 
 }
 
-Machine& Machine::compose(const Machine& other) {
+Machine& Machine::compose(const Machine& other) const {
 	MachineSymbols new_symbols = this->symbols.compose(other.symbols);
 	StatesUtil new_states = this->states.compose(other.states);
-	bool starting_is_renamed = new_states.states.find(other.states.current) == other.states.states.end();
+	bool starting_is_renamed = new_states.states.find(other.states.current) == new_states.states.end();
 
 	for (auto& el : this->states.states) {
 		if (el.second == StateType::ACCEPTING) {
@@ -79,9 +93,20 @@ Machine& Machine::compose(const Machine& other) {
 			}
 		}
 	}
+
+	Tape new_tape = tape;
+	if((string)other.tape != "")
+		new_tape.insertStringToTape((string)other.tape);
+
+	return *(new Machine(new_symbols, new_states, new_tape));
 }
 
-void MachineSymbols::printSymbols(ostream& os, symbol_set printable) {
+//Machine& Machine::whileMachine(const Machine& condition) const{
+//	
+//}
+
+
+void MachineSymbols::printSymbols(ostream& os, symbol_set printable) const{
 	for (auto it = printable.begin(); it != printable.end(); it++) {
 		os << *it;
 		if (std::distance(it, printable.end()) != 1) {
@@ -91,7 +116,7 @@ void MachineSymbols::printSymbols(ostream& os, symbol_set printable) {
 	os << '\n';
 }
 
-MachineSymbols& MachineSymbols::compose(MachineSymbols& other) {
+MachineSymbols& MachineSymbols::compose(const MachineSymbols& other) const{
 	if (other.blank_symbol != this->blank_symbol) {
 		throw invalid_argument("Attempt to compose machines with non-matching blank symbols");
 	}
@@ -103,3 +128,4 @@ MachineSymbols& MachineSymbols::compose(MachineSymbols& other) {
 
 	return *(new MachineSymbols(new_sigma, new_gamma, blank_symbol));
 }
+

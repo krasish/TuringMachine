@@ -43,8 +43,8 @@ struct MachineSymbols {
 	char blank_symbol;
 
 	MachineSymbols(symbol_set sigma = symbol_set(), symbol_set gamma = symbol_set(), char blank_symbol = ' ') : sigma(sigma), gamma(gamma), blank_symbol(blank_symbol) {};
-	void printSymbols(ostream& os, symbol_set printable);
-	MachineSymbols& compose(const MachineSymbols& other);
+	void printSymbols(ostream& os, symbol_set printable) const;
+	MachineSymbols& compose(const MachineSymbols& other) const;
 };
 
 class Machine {
@@ -54,11 +54,14 @@ public:
 	Machine(MachineSymbols symbols = MachineSymbols(), StatesUtil states = StatesUtil(), Tape tape = Tape()) : id(produced_machines++), symbols(symbols), states(states), tape(tape) {};
 
 	bool execute();
-	void save(ostream& os);
+	bool execute(string);
+	void save(ostream& os) const;
 	string executeAndGetTape();
+	string executeAndGetTape(string tape_load);
 	void print();
 
-	Machine& compose(const Machine& other);
+	Machine& compose(const Machine& other) const;
+	Machine& whileMachine(const Machine& condition) const;
 
 private:
 	unsigned id;

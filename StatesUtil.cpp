@@ -40,7 +40,7 @@ bool StatesUtil::addState(string name, StateType type) {
 	return states.try_emplace(name, type).second;
 }
 
-void StatesUtil::printStates(ostream& os, bool yellow_starting) {
+void StatesUtil::printStates(ostream& os, bool yellow_starting) const{
 	for (auto it = states.begin(); it != states.end(); it++) {
 		switch (it->second) {
 		case StateType::ACCEPTING: os << "A "; break;
@@ -58,7 +58,7 @@ void StatesUtil::printStates(ostream& os, bool yellow_starting) {
 	}
 }
 
-void StatesUtil::printTransitions(ostream& os) {
+void StatesUtil::printTransitions(ostream& os) const{
 	for (auto it = transitions.begin(); it != transitions.end(); it++) {
 		os << it->first.first << ' ' << it->first.second;
 		os << " => ";
@@ -72,7 +72,7 @@ void StatesUtil::printTransitions(ostream& os) {
 	}
 }
 
-StatesUtil& StatesUtil::compose(const StatesUtil& other) {
+StatesUtil& StatesUtil::compose(const StatesUtil& other) const{
 	state_map new_states = *(new state_map(states));
 
 	for (auto& state : new_states) {
@@ -80,8 +80,6 @@ StatesUtil& StatesUtil::compose(const StatesUtil& other) {
 			state.second = StateType::NORMAL;
 		}
 	}
-
-	new_states.emplace("HELPER-STATE", StateType::NORMAL);
 
 	set<string> renamed;
 	
@@ -94,7 +92,6 @@ StatesUtil& StatesUtil::compose(const StatesUtil& other) {
 			new_states.insert(el);
 		}
 	}
-
 
 	transitions_map new_transitions = *(new transitions_map(transitions));
 	for (auto& el : other.transitions) {
@@ -111,6 +108,8 @@ StatesUtil& StatesUtil::compose(const StatesUtil& other) {
 			new_transitions.emplace(state_pair(el.first.first + "-RNMD", el.first.second), state_tuple(get<0>(el.second) + "-RNMD", get<1>(el.second), get<2>(el.second)));
 		}
 	}
+	
+	return *(new StatesUtil(new_states, new_transitions, this->current));
 }
 
 void StatesUtil::moveTape(Tape& tape, TapeMovement movement) {

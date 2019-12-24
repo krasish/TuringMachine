@@ -16,6 +16,7 @@ public:
 	void replaceSymbol(char new_symbol);
 	char getSymbol() const;
 	char getBlank() const { return blank_symbol; }
+	void insertStringToTape(const string& str);
 
 	operator string() const;
 
@@ -32,7 +33,6 @@ private:
 
 	TapeCell* copyOther(const Tape&);
 	TapeCell* getFirst() const;
-	void insertStringToTape(const string& str);
 	void deleteContent();
 	char blank_symbol = ' ';
 

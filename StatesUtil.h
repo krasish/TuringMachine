@@ -48,10 +48,10 @@ public:
 	StateType transition(Tape& tape);
 	bool addTrasition(string from, string to, char old_tape, char new_tape, TapeMovement movement);
 	bool addState(string name, StateType type);
-	void printStates(ostream& os, bool yellow_starting);
-	void printTransitions(ostream& os);
+	void printStates(ostream& os, bool yellow_starting) const;
+	void printTransitions(ostream& os) const;
 	
-	StatesUtil& compose(const StatesUtil& other);
+	StatesUtil& compose(const StatesUtil& other) const;
 
 private:
 	string current;

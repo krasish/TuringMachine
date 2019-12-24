@@ -12,16 +12,28 @@ using std::string;
 int main() {
 	
 	string filename = "C:\\Users\\krasi\\Desktop\\s.txt";
+	string filename2 = "C:\\Users\\krasi\\Desktop\\s2.txt";
+	string filename3 = "C:\\Users\\krasi\\Desktop\\composed.txt";
 	std::ifstream ifs(filename);
-	MachineBuilder mf;
-	MachineParser p(&mf);
-	//p.parseFromConsole();
+	std::ifstream ifs2(filename2);
+	std::ofstream ofs(filename3);
+	MachineBuilder mb;
+	MachineParser p(&mb);
 	p.parseFromFile(ifs);
-	Machine m = mf.getMachine();
-	m.print();
-	//m.save(ifs);
+	Machine m = mb.getMachine();
+	//p.parseFromFile(ifs2);
+	p.parseFromConsole();
+	Machine m2 = mb.getMachine();
+	Machine m3 = m.compose(m2);
+	//TODO: create functino pass string to machine tape
+	//m3.save(ofs);
 	ifs.close();
-	cout << m.executeAndGetTape();
+	ifs2.close();
+	ofs.close();
+	m3.print();
+	m2.print();
+	cout << m2.executeAndGetTape("aaba") << endl;
+	cout << m3.executeAndGetTape("ABAaa");
 	
 	return 0;
 }
