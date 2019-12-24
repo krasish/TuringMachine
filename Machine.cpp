@@ -81,15 +81,15 @@ void Machine::print() const{
 Machine& Machine::compose(const Machine& other) const {
 	MachineSymbols new_symbols = this->symbols.compose(other.symbols);
 	StatesUtil new_states = this->states.compose(other.states);
-	bool starting_is_renamed = new_states.states.find(other.states.current) == new_states.states.end();
+	bool starting_is_renamed = new_states.states.find(other.states.starting) == new_states.states.end();
 
 	for (auto& el : this->states.states) {
 		if (el.second == StateType::ACCEPTING) {
-			for (auto& symbol : new_symbols.sigma) {
+			for (auto& symbol : new_symbols.gamma) {
 				if(starting_is_renamed)
-					new_states.addTrasition(el.first, other.states.current + "-RNMD", symbol, symbol, TapeMovement::STAY);
+					new_states.addTrasition(el.first, other.states.starting + "-RNMD", symbol, symbol, TapeMovement::STAY);
 				else
-					new_states.addTrasition(el.first, other.states.current, symbol, symbol, TapeMovement::STAY);
+					new_states.addTrasition(el.first, other.states.starting, symbol, symbol, TapeMovement::STAY);
 			}
 		}
 	}
@@ -101,13 +101,33 @@ Machine& Machine::compose(const Machine& other) const {
 	return *(new Machine(new_symbols, new_states, new_tape));
 }
 
-//Machine& Machine::whileMachine(const Machine& condition) const{
-//	Machine while_machine = condition.compose(*this);
-//	/*for (size_t i = 0; i < length; i++) {
-//
-//	}*/
-//
-//}
+Machine& Machine::whileMachine(const Machine& condition) const{
+	Machine* while_machine = new Machine(condition.compose(*this));
+
+	for (auto& state : while_machine->states.states) {
+		if (state.second == StateType::ACCEPTING) {
+			for (char ch : while_machine->symbols.gamma)
+				while_machine->states.addTrasition(state.first, condition.states.starting, ch, ch, TapeMovement::STAY);
+		}
+	}
+
+	// basically the only accepting states of an while-machine are the rejecting ones of the condition
+	// the following logic makes sure that condition is fulfilled
+	for (auto& state : while_machine->states.states) {
+		if (state.second == StateType::ACCEPTING) {
+			state.second = StateType::NORMAL;
+		}
+	}
+
+	for (auto state : condition.states.states) {
+		if (state.second == StateType::REJECTING) {
+			while_machine->states.states[state.first] = StateType::ACCEPTING;
+		}
+	}
+
+
+	return *while_machine;
+}
 
 
 void MachineSymbols::printSymbols(ostream& os, symbol_set printable) const{

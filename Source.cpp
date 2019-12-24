@@ -24,7 +24,7 @@ int main() {
 	p.parseFromFile(ifs2);
 	//p.parseFromConsole();
 	Machine m2 = mb.getMachine();
-	Machine m3 = m.compose(m2);
+	Machine m3 = m.whileMachine(m2);
 	m3.save(ofs);
 	ifs.close();
 	ifs2.close();
