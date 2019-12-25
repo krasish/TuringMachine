@@ -13,11 +13,13 @@ bool Machine::execute() {
 }
 
 bool Machine::execute(string tape_load) {
+	states.current = states.starting;
 	for (char ch : tape_load) {
 		if (symbols.gamma.find(ch) == symbols.gamma.end())
 			return new invalid_argument("Attempt to load not-supported symbol.");
 	}
-	tape.insertStringToTape(tape_load);
+	Tape new_tape = *(new Tape(tape_load));
+	tape = new_tape;
 	execute();
 }
 
@@ -42,7 +44,12 @@ void Machine::save(ostream& os) const{
 
 
 string Machine::executeAndGetTape() {
-	execute();
+	if (execute()) {
+		cout << BRIGHT_GREEN_TEXT << "Machine " << id << " executed and accepted the given input!" << RESET_COLORING << endl;
+	}
+	else {
+		cout << BRIGHT_RED_TEXT << "Machine " << id << " executed and rejected the given input!" << RESET_COLORING << endl;
+	}
 	return (string)tape;
 }
 

@@ -16,7 +16,7 @@ typedef pair<state_pair, state_tuple> transition;
 class MachineParser {
 public:
 
-	MachineParser(MachineBuilder* factory = nullptr) : builder(factory) {}
+	MachineParser(MachineBuilder* builder = nullptr) : builder(builder) {}
 
 	void parseFromConsole();
 	void parseFromFile(istream&);

@@ -155,6 +155,7 @@ void MachineParser::parseFromConsole() {
 
 	builder->setStateMap(states);
 	builder->setStartingState(starting);
+	builder->setCurrentState(current);
 	builder->setTransitionsMap(transitions);
 
 	cout << BRIGHT_GREEN_TEXT << "Machine read succesfuly!" << endl << RESET_COLORING;

@@ -59,6 +59,7 @@ public:
 	string executeAndGetTape();
 	string executeAndGetTape(string tape_load);
 	void print() const;
+	unsigned getId() { return id; }
 
 	Machine& compose(const Machine& other) const;
 	Machine& whileMachine(const Machine& condition) const;
