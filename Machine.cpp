@@ -85,7 +85,7 @@ void Machine::print() const{
 
 }
 
-Machine& Machine::compose(const Machine& other) const {
+Machine& Machine::after(const Machine& other) const {
 	MachineSymbols new_symbols = this->symbols.compose(other.symbols);
 	StatesUtil new_states = this->states.compose(other.states);
 	bool starting_is_renamed = new_states.states.find(other.states.starting) == new_states.states.end();
@@ -108,8 +108,12 @@ Machine& Machine::compose(const Machine& other) const {
 	return *(new Machine(new_symbols, new_states, new_tape));
 }
 
+Machine& Machine::compose(const Machine& other) const {
+	return other.after(*this);
+}
+
 Machine& Machine::whileMachine(const Machine& condition) const{
-	Machine* while_machine = new Machine(condition.compose(*this));
+	Machine* while_machine = new Machine(condition.after(*this));
 
 	for (auto& state : while_machine->states.states) {
 		if (state.second == StateType::ACCEPTING) {

@@ -97,7 +97,7 @@ void System::operate() {
 			unsigned id1 = std::stoi((*iter)[1]);
 			unsigned id2 = std::stoi((*iter)[2]);
 			try {
-				Machine composed = getMachine(id1).compose(getMachine(id2));
+				Machine composed = getMachine(id1).after(getMachine(id2));
 				machines.push_back(composed);
 				cout << GREEN_TEXT << "Composition machine with id " << composed.getId() << " was added!" << RESET_COLORING << endl;;
 			}

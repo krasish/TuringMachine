@@ -61,6 +61,7 @@ public:
 	void print() const;
 	unsigned getId() { return id; }
 
+	Machine& after(const Machine& other) const;
 	Machine& compose(const Machine& other) const;
 	Machine& whileMachine(const Machine& condition) const;
 
